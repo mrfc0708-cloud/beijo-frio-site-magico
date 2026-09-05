@@ -90,7 +90,6 @@ function Index() {
             <a href="#sobre">Nossa história</a>
             <a href="#onde">Onde estamos</a>
           </div>
-          <OrderButton compact className="header-order">Peça pelo WhatsApp</OrderButton>
         </nav>
       </header>
 
