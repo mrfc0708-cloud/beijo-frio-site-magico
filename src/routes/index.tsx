@@ -32,28 +32,24 @@ const products = [
     category: "Sorvetes",
     name: "Casquinha caprichada",
     description: "Cremoso, colorido e com a calda escorrendo do jeito que a gente ama.",
-    price: "A partir de R$ 6",
     image: heroImage,
   },
   {
     category: "Açaí",
     name: "Açaí do seu jeito",
     description: "Açaí bem gelado com frutas, granola e os complementos que você escolher.",
-    price: "A partir de R$ 12",
     image: acaiImage,
   },
   {
     category: "Milkshakes",
     name: "Milkshake cremoso",
     description: "Batido na hora, cheio de sabor, com chantilly e uma calda generosa.",
-    price: "A partir de R$ 14",
     image: milkshakeImage,
   },
   {
     category: "Bala Baiana",
     name: "Crocante por fora",
     description: "Casquinha caramelizada e recheio de coco macio, feito artesanalmente.",
-    price: "Consulte sabores",
     image: balaImage,
   },
 ];
@@ -133,14 +129,12 @@ function Index() {
                 <h3>{product.name}</h3>
                 <p>{product.description}</p>
                 <div className="product-bottom">
-                  <strong>{product.price}</strong>
                   <OrderButton compact>Pedir</OrderButton>
                 </div>
               </div>
             </article>
           ))}
         </div>
-        <p className="price-note">* Preços ilustrativos. Confirme o cardápio e os valores do dia pelo WhatsApp.</p>
       </section>
 
       <section id="sobre" className="story-section section-pad">

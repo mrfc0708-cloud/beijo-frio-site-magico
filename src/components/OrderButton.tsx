@@ -1,7 +1,10 @@
 import type { ReactNode } from "react";
 
-const WHATSAPP_URL =
-  "https://wa.me/5575982613780?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20quero%20fazer%20um%20pedido%20%F0%9F%8D%A6";
+const WHATSAPP_NUMBER = "5575982613780";
+const WHATSAPP_MESSAGE = encodeURIComponent(
+  "Olá! Vim pelo site e quero fazer um pedido 🍦"
+);
+const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`;
 
 type OrderButtonProps = {
   children: ReactNode;
