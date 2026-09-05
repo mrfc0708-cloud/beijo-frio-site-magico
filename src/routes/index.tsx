@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
 import { Heart, Instagram, MapPin, Sparkles, Star } from "lucide-react";
 import { OrderButton, WHATSAPP_URL, WhatsAppIcon } from "../components/OrderButton";
 import heroImage from "../assets/beijo-frio-hero.jpg";
