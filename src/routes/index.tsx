@@ -89,6 +89,7 @@ function Index() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
+        if (!entry) return;
         setIsHeroOrderVisible(entry.isIntersecting);
       },
       { threshold: 0.1, rootMargin: "0px" }

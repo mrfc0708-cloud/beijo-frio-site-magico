@@ -54,8 +54,6 @@ body, a, button { letter-spacing: 0; }
 .product-copy { padding: 1.2rem; }
 .product-copy h3 { margin: 0; color: var(--bf-purple); font: 800 1.5rem/1.05 "Baloo 2",sans-serif; }
 .product-copy>p { min-height: 67px; margin: .55rem 0 1rem; opacity: .7; font-size: .88rem; line-height: 1.5; }
-.product-bottom { display: flex; align-items: center; justify-content: space-between; gap: .65rem; }
-.product-bottom strong { font-size: .82rem; }
 .card-2,.card-4 { transform: translateY(1.25rem); }
 .card-2:hover,.card-4:hover { transform: translate(-3px,.75rem) rotate(.5deg); }
 .price-note,.testimonial-note { margin: 3rem 0 0; text-align: center; opacity: .62; font-size: .74rem; }
