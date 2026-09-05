@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
 import { Heart, Instagram, MapPin, Sparkles, Star } from "lucide-react";
 import { OrderButton, WHATSAPP_URL, WhatsAppIcon } from "../components/OrderButton";
 import heroImage from "../assets/beijo-frio-hero.jpg";
@@ -79,6 +80,25 @@ function BrandMark() {
 }
 
 function Index() {
+  const heroOrderRef = useRef<HTMLAnchorElement>(null);
+  const [isHeroOrderVisible, setIsHeroOrderVisible] = useState(true);
+
+  useEffect(() => {
+    const node = heroOrderRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry) return;
+        setIsHeroOrderVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1, rootMargin: "0px" }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <main>
       <header className="site-header">
@@ -89,7 +109,6 @@ function Index() {
             <a href="#sobre">Nossa história</a>
             <a href="#onde">Onde estamos</a>
           </div>
-          <OrderButton compact className="header-order">Peça pelo WhatsApp</OrderButton>
         </nav>
       </header>
 
@@ -107,7 +126,7 @@ function Index() {
           <p className="eyebrow"><Sparkles aria-hidden="true" /> Direto de São Domingos, Bahia</p>
           <h1>Sabor, qualidade<br />e <em>muito mais!</em></h1>
           <p className="hero-copy">Um beijo gelado em forma de sorvete, açaí e carinho. Feito pertinho de você.</p>
-          <OrderButton className="hero-order">Fazer pedido</OrderButton>
+          <OrderButton ref={heroOrderRef} className="hero-order">Fazer pedido</OrderButton>
         </div>
         <div className="hero-sticker" aria-hidden="true"><span>feito com</span><strong>♥</strong><span>pra você</span></div>
       </section>
@@ -128,9 +147,6 @@ function Index() {
               <div className="product-copy">
                 <h3>{product.name}</h3>
                 <p>{product.description}</p>
-                <div className="product-bottom">
-                  <OrderButton compact>Pedir</OrderButton>
-                </div>
               </div>
             </article>
           ))}
@@ -200,7 +216,13 @@ function Index() {
         <p>© 2026 Beijo Frio · São Domingos, BA</p>
       </footer>
 
-      <a className="floating-whatsapp" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" aria-label="Fazer pedido pelo WhatsApp">
+      <a
+        className={`floating-whatsapp ${!isHeroOrderVisible ? "is-visible" : ""}`}
+        href={WHATSAPP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Fazer pedido pelo WhatsApp"
+      >
         <WhatsAppIcon className="h-7 w-7" />
         <span>Peça aqui</span>
       </a>
