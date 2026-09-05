@@ -215,7 +215,13 @@ function Index() {
         <p>© 2026 Beijo Frio · São Domingos, BA</p>
       </footer>
 
-      <a className="floating-whatsapp" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" aria-label="Fazer pedido pelo WhatsApp">
+      <a
+        className={`floating-whatsapp ${!isHeroOrderVisible ? "is-visible" : ""}`}
+        href={WHATSAPP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Fazer pedido pelo WhatsApp"
+      >
         <WhatsAppIcon className="h-7 w-7" />
         <span>Peça aqui</span>
       </a>
