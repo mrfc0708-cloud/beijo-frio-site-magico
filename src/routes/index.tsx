@@ -128,9 +128,6 @@ function Index() {
               <div className="product-copy">
                 <h3>{product.name}</h3>
                 <p>{product.description}</p>
-                <div className="product-bottom">
-                  <OrderButton compact>Pedir</OrderButton>
-                </div>
               </div>
             </article>
           ))}
