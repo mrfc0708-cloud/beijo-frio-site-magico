@@ -80,6 +80,24 @@ function BrandMark() {
 }
 
 function Index() {
+  const heroOrderRef = useRef<HTMLAnchorElement>(null);
+  const [isHeroOrderVisible, setIsHeroOrderVisible] = useState(true);
+
+  useEffect(() => {
+    const node = heroOrderRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsHeroOrderVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1, rootMargin: "0px" }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <main>
       <header className="site-header">
@@ -107,7 +125,7 @@ function Index() {
           <p className="eyebrow"><Sparkles aria-hidden="true" /> Direto de São Domingos, Bahia</p>
           <h1>Sabor, qualidade<br />e <em>muito mais!</em></h1>
           <p className="hero-copy">Um beijo gelado em forma de sorvete, açaí e carinho. Feito pertinho de você.</p>
-          <OrderButton className="hero-order">Fazer pedido</OrderButton>
+          <OrderButton ref={heroOrderRef} className="hero-order">Fazer pedido</OrderButton>
         </div>
         <div className="hero-sticker" aria-hidden="true"><span>feito com</span><strong>♥</strong><span>pra você</span></div>
       </section>
