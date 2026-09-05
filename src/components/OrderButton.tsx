@@ -25,7 +25,7 @@ export function OrderButton({ children, className = "", compact = false }: Order
     <a
       href={WHATSAPP_URL}
       target="_blank"
-      rel="noreferrer"
+      rel="noopener noreferrer"
       className={`order-button ${compact ? "order-button-compact" : ""} ${className}`}
       aria-label={`${String(children)} pelo WhatsApp`}
     >

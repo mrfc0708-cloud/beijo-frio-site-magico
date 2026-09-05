@@ -195,12 +195,12 @@ function Index() {
       <footer className="site-footer">
         <BrandMark />
         <div><span>Funcionamento</span><strong>Horário a confirmar</strong></div>
-        <div><span>Faça seu pedido</span><a href={WHATSAPP_URL} target="_blank" rel="noreferrer">(75) 98261-3780</a></div>
+        <div><span>Faça seu pedido</span><a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">(75) 98261-3780</a></div>
         <div><span>Acompanhe</span><a href="https://www.instagram.com/beijofriosd" target="_blank" rel="noreferrer">@beijofriosd</a></div>
         <p>© 2026 Beijo Frio · São Domingos, BA</p>
       </footer>
 
-      <a className="floating-whatsapp" href={WHATSAPP_URL} target="_blank" rel="noreferrer" aria-label="Fazer pedido pelo WhatsApp">
+      <a className="floating-whatsapp" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" aria-label="Fazer pedido pelo WhatsApp">
         <WhatsAppIcon className="h-7 w-7" />
         <span>Peça aqui</span>
       </a>
