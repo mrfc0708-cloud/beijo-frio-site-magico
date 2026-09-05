@@ -1,15 +1,11 @@
-import { forwardRef, type ReactNode } from "react";
-
-const WHATSAPP_NUMBER = "5575982613780";
-const WHATSAPP_MESSAGE = encodeURIComponent(
-  "Olá! Vim pelo site e quero fazer um pedido 🍦"
-);
-const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`;
+import type { ReactNode, Ref } from "react";
+import { WHATSAPP_URL } from "../lib/whatsapp";
 
 type OrderButtonProps = {
   children: ReactNode;
   className?: string;
   compact?: boolean;
+  ref?: Ref<HTMLAnchorElement>;
 };
 
 export function WhatsAppIcon({ className = "h-5 w-5" }: { className?: string }) {
@@ -20,9 +16,8 @@ export function WhatsAppIcon({ className = "h-5 w-5" }: { className?: string }) 
   );
 }
 
-export const OrderButton = forwardRef<HTMLAnchorElement, OrderButtonProps>(
-  function OrderButton({ children, className = "", compact = false }, ref) {
-    return (
+export function OrderButton({ children, className = "", compact = false, ref }: OrderButtonProps) {
+  return (
       <a
         ref={ref}
         href={WHATSAPP_URL}
@@ -33,9 +28,8 @@ export const OrderButton = forwardRef<HTMLAnchorElement, OrderButtonProps>(
       >
         <WhatsAppIcon className={compact ? "h-4 w-4" : "h-5 w-5"} />
         <span>{children}</span>
-      </a>
-    );
-  }
-);
+    </a>
+  );
+}
 
 export { WHATSAPP_URL };
