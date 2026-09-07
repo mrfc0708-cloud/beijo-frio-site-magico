@@ -183,8 +183,8 @@ export function MenuOrder() {
   return (
     <section id="pedido" className="order-section section-pad">
       <div className="section-heading">
-        <p className="eyebrow eyebrow-dark">Peça online</p>
-        <h2>Monte seu pedido</h2>
+        <p className="eyebrow eyebrow-dark">ENTÃO VEM CÁ....</p>
+        <h2>Monte seu pedido!</h2>
         <p>Escolha os itens, ajuste as quantidades e finalize seu pedido.</p>
       </div>
 
