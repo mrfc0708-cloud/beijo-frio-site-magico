@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Heart, Instagram, MapPin, Sparkles, Star } from "lucide-react";
 import { OrderButton, WhatsAppIcon } from "../components/OrderButton";
+import { MenuOrder } from "../components/MenuOrder";
 import { WHATSAPP_URL } from "../lib/whatsapp";
 import heroImage from "../assets/beijo-frio-hero.jpg";
 import acaiImage from "../assets/acai-bowl.jpg";
@@ -153,6 +154,8 @@ function Index() {
           ))}
         </div>
       </section>
+
+      <MenuOrder />
 
       <section id="sobre" className="story-section section-pad">
         <div className="story-photo-wrap">
