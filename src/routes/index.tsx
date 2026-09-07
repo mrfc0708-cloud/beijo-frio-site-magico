@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Heart, IceCream2, Instagram, MapPin, Sparkles, Star } from "lucide-react";
 import { MenuOrder } from "../components/MenuOrder";
-import heroImage from "../assets/beijo-frio-hero.jpg";
-import acaiImage from "../assets/acai-bowl.jpg";
-import milkshakeImage from "../assets/milkshake.jpg";
-import balaImage from "../assets/bala-baiana.jpg";
+import heroImage from "../assets/beijo-frio-sorvete-real.jpg";
+import acaiImage from "../assets/beijo-frio-copo-real.jpg";
+import milkshakeImage from "../assets/beijo-frio-milkshakes-reais.jpg";
+import balaImage from "../assets/beijo-frio-salgados-reais.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -100,7 +100,7 @@ function Index() {
       <section id="inicio" className="hero-section">
         <img
           src={heroImage}
-          alt="Sorvete cremoso com calda de frutas vermelhas em fundo vibrante"
+          alt="Taça de sorvetes Beijo Frio com caldas de chocolate e frutas vermelhas"
           width={1536}
           height={1024}
           fetchPriority="high"
@@ -145,7 +145,7 @@ function Index() {
 
       <section id="sobre" className="story-section section-pad">
         <div className="story-photo-wrap">
-          <img src={milkshakeImage} alt="Milkshake de morango Beijo Frio" width={900} height={1000} loading="lazy" />
+          <img src={acaiImage} alt="Copo de milkshake Beijo Frio com calda de chocolate" width={900} height={1100} loading="lazy" />
           <span className="story-sparkle" aria-hidden="true">✦</span>
           <span className="story-label">Da nossa casa<br />para a sua</span>
         </div>
