@@ -83,8 +83,6 @@ function Index() {
     document.getElementById("cardapio")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  return () => observer.disconnect();
-  }, []);
 
   return (
     <main>
