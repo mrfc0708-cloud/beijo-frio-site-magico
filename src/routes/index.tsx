@@ -1,9 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
-import { Heart, Instagram, MapPin, Sparkles, Star } from "lucide-react";
-import { OrderButton, WhatsAppIcon } from "../components/OrderButton";
+import { Heart, IceCream2, Instagram, MapPin, Sparkles, Star } from "lucide-react";
 import { MenuOrder } from "../components/MenuOrder";
-import { WHATSAPP_URL } from "../lib/whatsapp";
 import heroImage from "../assets/beijo-frio-hero.jpg";
 import acaiImage from "../assets/acai-bowl.jpg";
 import milkshakeImage from "../assets/milkshake.jpg";
@@ -16,12 +13,12 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Sorvetes, açaí, milkshakes e bala baiana feitos com carinho em São Domingos, Bahia. Peça pelo WhatsApp.",
+          "Sorvetes, açaí, milkshakes e bala baiana feitos com carinho em São Domingos, Bahia. Monte seu pedido online.",
       },
       { property: "og:title", content: "Beijo Frio | Sorveteria e Açaí" },
       {
         property: "og:description",
-        content: "Seu momento mais gostoso em São Domingos. Peça pelo WhatsApp.",
+        content: "Seu momento mais gostoso em São Domingos. Monte seu pedido online.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -82,23 +79,11 @@ function BrandMark() {
 }
 
 function Index() {
-  const heroOrderRef = useRef<HTMLAnchorElement>(null);
-  const [isHeroOrderVisible, setIsHeroOrderVisible] = useState(true);
+  function scrollToMenu() {
+    document.getElementById("cardapio")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
-  useEffect(() => {
-    const node = heroOrderRef.current;
-    if (!node) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry) return;
-        setIsHeroOrderVisible(entry.isIntersecting);
-      },
-      { threshold: 0.1, rootMargin: "0px" }
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
+  return () => observer.disconnect();
   }, []);
 
   return (
@@ -128,7 +113,10 @@ function Index() {
           <p className="eyebrow"><Sparkles aria-hidden="true" /> Direto de São Domingos, Bahia</p>
           <h1>Sabor, qualidade<br />e <em>muito mais!</em></h1>
           <p className="hero-copy">Um beijo gelado em forma de sorvete, açaí e carinho. Feito pertinho de você.</p>
-          <OrderButton ref={heroOrderRef} className="hero-order">Fazer pedido</OrderButton>
+          <button type="button" className="order-button hero-order" onClick={scrollToMenu}>
+            <IceCream2 aria-hidden="true" className="h-5 w-5" />
+            <span>Fazer pedido</span>
+          </button>
         </div>
         <div className="hero-sticker" aria-hidden="true"><span>feito com</span><strong>♥</strong><span>pra você</span></div>
       </section>
@@ -215,21 +203,11 @@ function Index() {
       <footer className="site-footer">
         <BrandMark />
         <div><span>Funcionamento</span><strong>Horário a confirmar</strong></div>
-        <div><span>Faça seu pedido</span><a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">(75) 98261-3780</a></div>
+        <div><span>Contato</span><strong>(75) 98261-3780</strong></div>
         <div><span>Acompanhe</span><a href="https://www.instagram.com/beijofriosd" target="_blank" rel="noreferrer">@beijofriosd</a></div>
         <p>© 2026 Beijo Frio · São Domingos, BA</p>
       </footer>
 
-      <a
-        className={`floating-whatsapp ${!isHeroOrderVisible ? "is-visible" : ""}`}
-        href={WHATSAPP_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Fazer pedido pelo WhatsApp"
-      >
-        <WhatsAppIcon className="h-7 w-7" />
-        <span>Peça aqui</span>
-      </a>
     </main>
   );
 }
