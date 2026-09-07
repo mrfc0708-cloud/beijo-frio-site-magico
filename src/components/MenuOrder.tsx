@@ -1,6 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
-import { WhatsAppIcon } from "./OrderButton";
 import { WHATSAPP_NUMBER } from "../lib/whatsapp";
 
 type MenuItem = {
@@ -38,6 +37,8 @@ const FLAVORS = [
   "Chocolate",
 ];
 
+const CITY = "São Domingos - Bahia";
+
 type CartLine = {
   key: string;
   label: string;
@@ -52,11 +53,21 @@ export function MenuOrder() {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [flavorItem, setFlavorItem] = useState<MenuItem | null>(null);
+  const [activeItem, setActiveItem] = useState<MenuItem | null>(null);
   const [picked, setPicked] = useState<string[]>([]);
+  const [qty, setQty] = useState(1);
   const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
+  const [street, setStreet] = useState("");
+  const [district, setDistrict] = useState("");
+  const [number, setNumber] = useState("");
   const [notes, setNotes] = useState("");
+  const [flight, setFlight] = useState<null | {
+    id: number;
+    style: React.CSSProperties;
+  }>(null);
+
+  const cartRef = useRef<HTMLButtonElement>(null);
+  const flightId = useRef(0);
 
   const totals = useMemo(() => {
     const count = lines.reduce((sum, l) => sum + l.qty, 0);
@@ -64,42 +75,65 @@ export function MenuOrder() {
     return { count, value };
   }, [lines]);
 
-  function addLine(label: string, price: number, key: string) {
-    setLines((prev) => {
-      const found = prev.find((l) => l.key === key);
-      if (found) return prev.map((l) => (l.key === key ? { ...l, qty: l.qty + 1 } : l));
-      return [...prev, { key, label, price, qty: 1 }];
+  function flyToCart(from: HTMLElement | null) {
+    const cart = cartRef.current;
+    if (!from || !cart) return;
+    const a = from.getBoundingClientRect();
+    const b = cart.getBoundingClientRect();
+    const id = ++flightId.current;
+    setFlight({
+      id,
+      style: {
+        left: `${a.left + a.width / 2}px`,
+        top: `${a.top + a.height / 2}px`,
+        ["--bf-tx" as string]: `${b.left + b.width / 2 - (a.left + a.width / 2)}px`,
+        ["--bf-ty" as string]: `${b.top + b.height / 2 - (a.top + a.height / 2)}px`,
+      },
     });
-    setCartOpen(true);
+    window.setTimeout(() => {
+      setFlight((cur) => (cur && cur.id === id ? null : cur));
+    }, 760);
   }
 
-  function handleAdd(item: MenuItem) {
-    if (item.scoops) {
-      setPicked([]);
-      setFlavorItem(item);
-      return;
-    }
-    addLine(item.name, item.price, item.id);
+  function addLine(label: string, price: number, key: string, amount: number) {
+    setLines((prev) => {
+      const found = prev.find((l) => l.key === key);
+      if (found)
+        return prev.map((l) => (l.key === key ? { ...l, qty: l.qty + amount } : l));
+      return [...prev, { key, label, price, qty: amount }];
+    });
+  }
+
+  function openItem(item: MenuItem) {
+    setPicked([]);
+    setQty(1);
+    setActiveItem(item);
   }
 
   function toggleFlavor(flavor: string) {
-    if (!flavorItem) return;
+    if (!activeItem?.scoops) return;
     setPicked((prev) => {
       if (prev.includes(flavor)) return prev.filter((f) => f !== flavor);
-      if (prev.length >= (flavorItem.scoops ?? 1)) return prev;
+      if (prev.length >= (activeItem.scoops ?? 1)) return prev;
       return [...prev, flavor];
     });
   }
 
-  function confirmFlavors() {
-    if (!flavorItem) return;
-    const flavors = picked.join(" + ");
-    addLine(
-      `${flavorItem.name} ${flavorItem.variant} (${flavors})`,
-      flavorItem.price,
-      `${flavorItem.id}-${picked.slice().sort().join("|")}`
-    );
-    setFlavorItem(null);
+  function confirmAdd(event: React.MouseEvent<HTMLButtonElement>) {
+    if (!activeItem) return;
+    if (activeItem.scoops) {
+      const flavors = picked.join(" + ");
+      addLine(
+        `${activeItem.name} ${activeItem.variant} (${flavors})`,
+        activeItem.price,
+        `${activeItem.id}-${picked.slice().sort().join("|")}`,
+        qty
+      );
+    } else {
+      addLine(activeItem.name, activeItem.price, activeItem.id, qty);
+    }
+    flyToCart(event.currentTarget);
+    setActiveItem(null);
   }
 
   function changeQty(key: string, delta: number) {
@@ -114,7 +148,12 @@ export function MenuOrder() {
     setLines((prev) => prev.filter((l) => l.key !== key));
   }
 
-  const canSend = lines.length > 0 && name.trim().length > 1 && address.trim().length > 4;
+  const canSend =
+    lines.length > 0 &&
+    name.trim().length > 1 &&
+    street.trim().length > 2 &&
+    district.trim().length > 1 &&
+    number.trim().length > 0;
 
   function buildMessage() {
     const itemLines = lines
@@ -128,20 +167,25 @@ export function MenuOrder() {
       `*Total:* ${brl(totals.value)}`,
       "",
       `*Nome:* ${name.trim()}`,
-      `*Endereço de entrega:* ${address.trim()}`,
+      `*Endereço:* ${street.trim()}`,
+      `*Bairro:* ${district.trim()}`,
+      `*Número:* ${number.trim()}`,
+      `*Cidade:* ${CITY}`,
     ];
     if (notes.trim()) parts.push(`*Observações:* ${notes.trim()}`);
     return parts.join("\n");
   }
 
-  const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildMessage())}`;
+  const orderHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildMessage())}`;
+  const flavorsNeeded = activeItem?.scoops ?? 0;
+  const flavorsOk = !activeItem?.scoops || picked.length === flavorsNeeded;
 
   return (
     <section id="pedido" className="order-section section-pad">
       <div className="section-heading">
         <p className="eyebrow eyebrow-dark">Peça online</p>
         <h2>Monte seu pedido</h2>
-        <p>Escolha os itens, ajuste as quantidades e envie tudo pronto pelo WhatsApp.</p>
+        <p>Escolha os itens, ajuste as quantidades e finalize seu pedido.</p>
       </div>
 
       {MENU.map((group) => (
@@ -156,7 +200,7 @@ export function MenuOrder() {
                   {item.scoops ? <p>Escolha {item.scoops} sabores</p> : null}
                 </div>
                 <span className="order-price">{brl(item.price)}</span>
-                <button type="button" className="order-add" onClick={() => handleAdd(item)}>
+                <button type="button" className="order-add" onClick={() => openItem(item)}>
                   <Plus aria-hidden="true" /> Adicionar
                 </button>
               </li>
@@ -168,6 +212,7 @@ export function MenuOrder() {
       <button
         type="button"
         className="cart-fab"
+        ref={cartRef}
         onClick={() => setCartOpen(true)}
         aria-label={`Abrir carrinho, ${totals.count} itens, total ${brl(totals.value)}`}
       >
@@ -176,37 +221,58 @@ export function MenuOrder() {
         <span className="cart-fab-total">{brl(totals.value)}</span>
       </button>
 
-      {flavorItem ? (
-        <div className="bf-overlay" role="dialog" aria-modal="true" aria-label="Escolher sabores">
+      {flight ? (
+        <span key={flight.id} className="magic-lamp" style={flight.style} aria-hidden="true">
+          🍦
+        </span>
+      ) : null}
+
+      {activeItem ? (
+        <div className="bf-overlay" role="dialog" aria-modal="true" aria-label="Adicionar item">
           <div className="bf-modal">
-            <button type="button" className="bf-close" onClick={() => setFlavorItem(null)} aria-label="Fechar">
+            <button type="button" className="bf-close" onClick={() => setActiveItem(null)} aria-label="Fechar">
               <X aria-hidden="true" />
             </button>
             <h3>
-              {flavorItem.name} {flavorItem.variant}
+              {activeItem.name} {activeItem.variant ?? ""}
             </h3>
-            <p className="bf-modal-note">
-              Escolha {flavorItem.scoops} sabores ({picked.length}/{flavorItem.scoops})
-            </p>
-            <div className="flavor-grid">
-              {FLAVORS.map((flavor) => (
-                <button
-                  type="button"
-                  key={flavor}
-                  className={`flavor-chip ${picked.includes(flavor) ? "is-on" : ""}`}
-                  onClick={() => toggleFlavor(flavor)}
-                >
-                  {flavor}
+            {activeItem.scoops ? (
+              <>
+                <p className="bf-modal-note">
+                  Escolha {flavorsNeeded} sabores ({picked.length}/{flavorsNeeded})
+                </p>
+                <div className="flavor-grid">
+                  {FLAVORS.map((flavor) => (
+                    <button
+                      type="button"
+                      key={flavor}
+                      className={`flavor-chip ${picked.includes(flavor) ? "is-on" : ""}`}
+                      onClick={() => toggleFlavor(flavor)}
+                    >
+                      {flavor}
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <p className="bf-modal-note">{brl(activeItem.price)} cada</p>
+            )}
+
+            <div className="qty-picker">
+              <span>Quantidade</span>
+              <div className="qty-box">
+                <button type="button" onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Diminuir">
+                  <Minus aria-hidden="true" />
                 </button>
-              ))}
+                <span>{qty}</span>
+                <button type="button" onClick={() => setQty((q) => Math.min(20, q + 1))} aria-label="Aumentar">
+                  <Plus aria-hidden="true" />
+                </button>
+              </div>
             </div>
-            <button
-              type="button"
-              className="bf-primary"
-              disabled={picked.length !== flavorItem.scoops}
-              onClick={confirmFlavors}
-            >
-              Adicionar ao carrinho — {brl(flavorItem.price)}
+
+            <button type="button" className="bf-primary" disabled={!flavorsOk} onClick={confirmAdd}>
+              Adicionar ao carrinho — {brl(activeItem.price * qty)}
             </button>
           </div>
         </div>
@@ -255,24 +321,6 @@ export function MenuOrder() {
                   <span>Total</span>
                   <strong>{brl(totals.value)}</strong>
                 </p>
-                <label className="bf-field">
-                  Endereço de entrega
-                  <textarea
-                    value={address}
-                    maxLength={300}
-                    onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Rua, número, bairro e ponto de referência"
-                  />
-                </label>
-                <label className="bf-field">
-                  Observações (opcional)
-                  <textarea
-                    value={notes}
-                    maxLength={300}
-                    onChange={(e) => setNotes(e.target.value)}
-                    placeholder="Ex.: sem cobertura, trocar sabor"
-                  />
-                </label>
                 <button
                   type="button"
                   className="bf-primary"
@@ -281,7 +329,7 @@ export function MenuOrder() {
                     setCheckoutOpen(true);
                   }}
                 >
-                  <WhatsAppIcon className="h-5 w-5" /> Finalizar pedido no WhatsApp
+                  Continuar para entrega
                 </button>
               </>
             )}
@@ -290,13 +338,13 @@ export function MenuOrder() {
       ) : null}
 
       {checkoutOpen ? (
-        <div className="bf-overlay" role="dialog" aria-modal="true" aria-label="Seus dados">
+        <div className="bf-overlay" role="dialog" aria-modal="true" aria-label="Dados de entrega">
           <div className="bf-modal">
             <button type="button" className="bf-close" onClick={() => setCheckoutOpen(false)} aria-label="Fechar">
               <X aria-hidden="true" />
             </button>
-            <h3>Seus dados</h3>
-            <p className="bf-modal-note">Confirme nome e endereço para enviarmos seu pedido.</p>
+            <h3>Dados de entrega</h3>
+            <p className="bf-modal-note">Última etapa: informe nome e endereço para a entrega.</p>
             <label className="bf-field">
               Nome
               <input
@@ -307,13 +355,35 @@ export function MenuOrder() {
               />
             </label>
             <label className="bf-field">
-              Endereço de entrega
-              <textarea
-                value={address}
-                maxLength={300}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="Rua, número, bairro e ponto de referência"
+              Endereço
+              <input
+                value={street}
+                maxLength={140}
+                onChange={(e) => setStreet(e.target.value)}
+                placeholder="Rua / avenida"
               />
+            </label>
+            <label className="bf-field">
+              Bairro
+              <input
+                value={district}
+                maxLength={100}
+                onChange={(e) => setDistrict(e.target.value)}
+                placeholder="Seu bairro"
+              />
+            </label>
+            <label className="bf-field">
+              Número
+              <input
+                value={number}
+                maxLength={12}
+                onChange={(e) => setNumber(e.target.value)}
+                placeholder="Nº"
+              />
+            </label>
+            <label className="bf-field">
+              Cidade
+              <input value={CITY} readOnly disabled aria-readonly="true" />
             </label>
             <label className="bf-field">
               Observações (opcional)
@@ -331,12 +401,12 @@ export function MenuOrder() {
             {canSend ? (
               <a
                 className="bf-primary"
-                href={whatsappHref}
+                href={orderHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setCheckoutOpen(false)}
               >
-                <WhatsAppIcon className="h-5 w-5" /> Enviar pedido no WhatsApp
+                Enviar pedido
               </a>
             ) : (
               <button type="button" className="bf-primary" disabled>
