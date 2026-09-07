@@ -30,26 +30,26 @@ export const Route = createFileRoute("/")({
 const products = [
   {
     category: "Sorvetes",
-    name: "Casquinha caprichada",
-    description: "Cremoso, colorido e com a calda escorrendo do jeito que a gente ama.",
+    name: "Casquinha caprichada?",
+    description: "Aqui tem e nada supera!",
     image: heroImage,
   },
   {
     category: "Açaí",
-    name: "Açaí do seu jeito",
-    description: "Açaí bem gelado com frutas, granola e os complementos que você escolher.",
+    name: "Açaí do seu jeito?",
+    description: "Tão bom quanto um feriadão!",
     image: acaiImage,
   },
   {
     category: "Milkshakes",
-    name: "Milkshake cremoso",
-    description: "Batido na hora, cheio de sabor, com chantilly e uma calda generosa.",
+    name: "Milkshake cremoso?",
+    description: "Daqueles que levam todo o estresse embora de tão bons!",
     image: milkshakeImage,
   },
   {
     category: "Bala Baiana",
-    name: "Crocante por fora",
-    description: "Casquinha caramelizada e recheio de coco macio, feito artesanalmente.",
+    name: "AQUELA Bala Baiana?",
+    description: "Pra matar AQUELA vontade de doce...",
     image: balaImage,
   },
 ];
@@ -90,8 +90,8 @@ function Index() {
         <nav className="nav-shell" aria-label="Navegação principal">
           <BrandMark />
           <div className="nav-links">
-            <a href="#cardapio">Cardápio</a>
-            <a href="#sobre">Nossa história</a>
+            <a href="#cardapio">Pedir</a>
+            <a href="#sobre">Nossa História</a>
             <a href="#onde">Onde estamos</a>
           </div>
         </nav>
@@ -122,7 +122,7 @@ function Index() {
       <section id="cardapio" className="menu-section section-pad">
         <div className="section-heading">
           <p className="eyebrow eyebrow-dark">Escolha seu favorito</p>
-          <h2>Nosso cardápio</h2>
+          <h2>O QUE VOCÊ PROCURA?</h2>
           <p>Para matar a vontade de doce, refrescar o dia ou celebrar qualquer momento.</p>
         </div>
         <div className="product-grid">
@@ -152,7 +152,7 @@ function Index() {
         <div className="story-copy">
           <p className="eyebrow">A nossa história</p>
           <h2>Tem carinho em cada colherada.</h2>
-          <p>A Beijo Frio nasceu para deixar São Domingos mais doce. Somos uma sorveteria de bairro que acredita em sabores bem feitos, ingredientes de qualidade e atendimento que conhece você pelo nome.</p>
+           <p>Desde antes de Raul Seixas e seus 10.000 anos... Nós já estávamos aqui! Salvando seu verão com um sorvete bem refrescante e uma sobremesa inesquecível!</p>
           <p>Aqui, cada pedido é preparado com calma e capricho — daquele jeitinho artesanal que transforma uma sobremesa em memória boa.</p>
           <div className="story-sign"><Heart aria-hidden="true" /> Feito por gente daqui</div>
         </div>
