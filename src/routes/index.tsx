@@ -30,26 +30,26 @@ export const Route = createFileRoute("/")({
 const products = [
   {
     category: "Sorvetes",
-    name: "Casquinha caprichada?",
+    name: "Banana Split?",
     description: "Aqui tem e nada supera!",
     image: heroImage,
   },
   {
     category: "Açaí",
-    name: "Açaí do seu jeito?",
+    name: "Milk Shake no conforto de casa?",
     description: "Tão bom quanto um feriadão!",
     image: acaiImage,
   },
   {
     category: "Milkshakes",
-    name: "Milkshake cremoso?",
+    name: "E que tal um na taça?",
     description: "Daqueles que levam todo o estresse embora de tão bons!",
     image: milkshakeImage,
   },
   {
     category: "Bala Baiana",
-    name: "AQUELA Bala Baiana?",
-    description: "Pra matar AQUELA vontade de doce...",
+    name: "AQUELE Pastel de Forno?",
+    description: "Pra matar AQUELA vontade de um lanchinho...",
     image: balaImage,
   },
 ];
