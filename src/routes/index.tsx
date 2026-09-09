@@ -105,10 +105,10 @@ function Index() {
           <p className="eyebrow"><Sparkles aria-hidden="true" /> Direto de São Domingos, Bahia</p>
           <h1>Sabor, qualidade<br />e <em>muito mais!</em></h1>
           <p className="hero-copy">Um beijo gelado em forma de sorvete, açaí e carinho. Feito pertinho de você.</p>
-          <button type="button" className="order-button hero-order" onClick={scrollToMenu}>
+          <Link to="/pedido" className="order-button hero-order">
             <IceCream2 aria-hidden="true" className="h-5 w-5" />
             <span>Fazer pedido</span>
-          </button>
+          </Link>
         </div>
         <div className="hero-sticker" aria-hidden="true"><span>feito com</span><strong>♥</strong><span>pra você</span></div>
       </section>
