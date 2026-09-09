@@ -1,6 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Heart, IceCream2, Instagram, MapPin, Sparkles, Star } from "lucide-react";
-import { MenuOrder } from "../components/MenuOrder";
 import heroImage from "../assets/beijo-frio-sorvete-real.jpg";
 import acaiImage from "../assets/beijo-frio-copo-real.jpg";
 import milkshakeImage from "../assets/beijo-frio-milkshakes-reais.jpg";
@@ -79,18 +78,13 @@ function BrandMark() {
 }
 
 function Index() {
-  function scrollToMenu() {
-    document.getElementById("cardapio")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-
   return (
     <main>
       <header className="site-header">
         <nav className="nav-shell" aria-label="Navegação principal">
           <BrandMark />
           <div className="nav-links">
-            <a href="#cardapio">Pedir</a>
+            <Link to="/pedido">Pedir</Link>
             <a href="#sobre">Nossa História</a>
             <a href="#onde">Onde estamos</a>
           </div>
@@ -111,10 +105,10 @@ function Index() {
           <p className="eyebrow"><Sparkles aria-hidden="true" /> Direto de São Domingos, Bahia</p>
           <h1>Sabor, qualidade<br />e <em>muito mais!</em></h1>
           <p className="hero-copy">Um beijo gelado em forma de sorvete, açaí e carinho. Feito pertinho de você.</p>
-          <button type="button" className="order-button hero-order" onClick={scrollToMenu}>
+          <Link to="/pedido" className="order-button hero-order">
             <IceCream2 aria-hidden="true" className="h-5 w-5" />
             <span>Fazer pedido</span>
-          </button>
+          </Link>
         </div>
         <div className="hero-sticker" aria-hidden="true"><span>feito com</span><strong>♥</strong><span>pra você</span></div>
       </section>
@@ -141,7 +135,6 @@ function Index() {
         </div>
       </section>
 
-      <MenuOrder />
 
       <section id="sobre" className="story-section section-pad">
         <div className="story-photo-wrap">

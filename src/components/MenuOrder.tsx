@@ -1,6 +1,5 @@
 import { useMemo, useRef, useState } from "react";
 import { Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
-import { WHATSAPP_NUMBER } from "../lib/whatsapp";
 import { supabase } from "@/integrations/supabase/client";
 
 type MenuItem = {
@@ -40,6 +39,14 @@ const FLAVORS = [
 
 const CITY = "São Domingos - Bahia";
 
+const PAYMENTS = [
+  { id: "credito", label: "Cartão de crédito" },
+  { id: "debito", label: "Cartão de débito" },
+  { id: "dinheiro", label: "Dinheiro" },
+] as const;
+
+type PaymentId = (typeof PAYMENTS)[number]["id"];
+
 type CartLine = {
   key: string;
   label: string;
@@ -62,6 +69,12 @@ export function MenuOrder() {
   const [district, setDistrict] = useState("");
   const [number, setNumber] = useState("");
   const [notes, setNotes] = useState("");
+  const [payment, setPayment] = useState<PaymentId | null>(null);
+  const [changeFor, setChangeFor] = useState("");
+  const [noChange, setNoChange] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
   const [flight, setFlight] = useState<null | {
     id: number;
     style: React.CSSProperties;
@@ -149,35 +162,25 @@ export function MenuOrder() {
     setLines((prev) => prev.filter((l) => l.key !== key));
   }
 
+  const changeValue = Number(changeFor.replace(",", "."));
+  const cashOk =
+    payment !== "dinheiro" ||
+    noChange ||
+    (changeFor.trim().length > 0 && !Number.isNaN(changeValue) && changeValue >= totals.value);
+
   const canSend =
     lines.length > 0 &&
     name.trim().length > 1 &&
     street.trim().length > 2 &&
     district.trim().length > 1 &&
-    number.trim().length > 0;
+    number.trim().length > 0 &&
+    payment !== null &&
+    cashOk;
 
-  function buildMessage() {
-    const itemLines = lines
-      .map((l) => `• ${l.qty}x ${l.label} — ${brl(l.price)} cada (${brl(l.price * l.qty)})`)
-      .join("\n");
-    const parts = [
-      "*Novo pedido — Beijo Frio* 🍦",
-      "",
-      itemLines,
-      "",
-      `*Total:* ${brl(totals.value)}`,
-      "",
-      `*Nome:* ${name.trim()}`,
-      `*Endereço:* ${street.trim()}`,
-      `*Bairro:* ${district.trim()}`,
-      `*Número:* ${number.trim()}`,
-      `*Cidade:* ${CITY}`,
-    ];
-    if (notes.trim()) parts.push(`*Observações:* ${notes.trim()}`);
-    return parts.join("\n");
-  }
-
-  async function savePedido() {
+  async function enviarPedido() {
+    if (!canSend || sending) return;
+    setSending(true);
+    setSendError(null);
     const { error } = await supabase.from("pedidos").insert({
       itens: lines.map((l) => ({ label: l.label, price: l.price, qty: l.qty })),
       total: totals.value,
@@ -186,11 +189,24 @@ export function MenuOrder() {
       bairro: district.trim(),
       numero: number.trim(),
       observacoes: notes.trim() || null,
+      forma_pagamento: payment,
+      troco_para: payment === "dinheiro" && !noChange ? changeValue : null,
+      sem_troco: payment === "dinheiro" ? noChange : false,
     });
-    if (error) console.error("Erro ao salvar pedido:", error);
+    setSending(false);
+    if (error) {
+      setSendError("Não conseguimos enviar seu pedido. Tente novamente.");
+      return;
+    }
+    setLines([]);
+    setNotes("");
+    setPayment(null);
+    setChangeFor("");
+    setNoChange(false);
+    setCheckoutOpen(false);
+    setDone(true);
   }
 
-  const orderHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildMessage())}`;
   const flavorsNeeded = activeItem?.scoops ?? 0;
   const flavorsOk = !activeItem?.scoops || picked.length === flavorsNeeded;
 
@@ -358,7 +374,7 @@ export function MenuOrder() {
               <X aria-hidden="true" />
             </button>
             <h3>Dados de entrega</h3>
-            <p className="bf-modal-note">Última etapa: informe nome e endereço para a entrega.</p>
+            <p className="bf-modal-note">Última etapa: informe nome, endereço e forma de pagamento.</p>
             <label className="bf-field">
               Nome
               <input
@@ -408,28 +424,79 @@ export function MenuOrder() {
                 placeholder="Ex.: sem cobertura, trocar sabor"
               />
             </label>
+
+            <p className="bf-modal-note bf-pay-title">Como deseja pagar?</p>
+            <div className="flavor-grid">
+              {PAYMENTS.map((option) => (
+                <button
+                  type="button"
+                  key={option.id}
+                  className={`flavor-chip ${payment === option.id ? "is-on" : ""}`}
+                  onClick={() => {
+                    setPayment(option.id);
+                    if (option.id !== "dinheiro") {
+                      setChangeFor("");
+                      setNoChange(false);
+                    }
+                  }}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+
+            {payment === "dinheiro" ? (
+              <>
+                <label className="bf-field">
+                  Troco para quanto?
+                  <input
+                    value={changeFor}
+                    inputMode="decimal"
+                    maxLength={10}
+                    disabled={noChange}
+                    onChange={(e) => setChangeFor(e.target.value)}
+                    placeholder="Ex.: 50"
+                  />
+                </label>
+                <label className="bf-check">
+                  <input
+                    type="checkbox"
+                    checked={noChange}
+                    onChange={(e) => {
+                      setNoChange(e.target.checked);
+                      if (e.target.checked) setChangeFor("");
+                    }}
+                  />
+                  Não preciso de troco
+                </label>
+              </>
+            ) : null}
+
             <p className="cart-total">
               <span>Total</span>
               <strong>{brl(totals.value)}</strong>
             </p>
-            {canSend ? (
-              <a
-                className="bf-primary"
-                href={orderHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => {
-                  void savePedido();
-                  setCheckoutOpen(false);
-                }}
-              >
-                Enviar pedido
-              </a>
-            ) : (
-              <button type="button" className="bf-primary" disabled>
-                Preencha nome e endereço
-              </button>
-            )}
+            {sendError ? <p className="bf-modal-note">{sendError}</p> : null}
+            <button type="button" className="bf-primary" disabled={!canSend || sending} onClick={enviarPedido}>
+              {sending ? "Enviando…" : canSend ? "Enviar pedido" : "Preencha os dados e o pagamento"}
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {done ? (
+        <div className="bf-overlay" role="dialog" aria-modal="true" aria-label="Pedido enviado">
+          <div className="bf-modal">
+            <button type="button" className="bf-close" onClick={() => setDone(false)} aria-label="Fechar">
+              <X aria-hidden="true" />
+            </button>
+            <h3>Pedido enviado! 🍦</h3>
+            <p className="bf-modal-note">
+              Recebemos seu pedido e já estamos preparando com carinho. Em instantes a equipe confirma a entrega.
+            </p>
+            <button type="button" className="bf-primary" onClick={() => setDone(false)}>
+              Fazer outro pedido
+            </button>
           </div>
         </div>
       ) : null}
