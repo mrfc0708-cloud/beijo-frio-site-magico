@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
 import { WHATSAPP_NUMBER } from "../lib/whatsapp";
+import { supabase } from "@/integrations/supabase/client";
 
 type MenuItem = {
   id: string;
@@ -174,6 +175,19 @@ export function MenuOrder() {
     ];
     if (notes.trim()) parts.push(`*Observações:* ${notes.trim()}`);
     return parts.join("\n");
+  }
+
+  async function savePedido() {
+    const { error } = await supabase.from("pedidos").insert({
+      itens: lines.map((l) => ({ label: l.label, price: l.price, qty: l.qty })),
+      total: totals.value,
+      nome: name.trim(),
+      endereco: street.trim(),
+      bairro: district.trim(),
+      numero: number.trim(),
+      observacoes: notes.trim() || null,
+    });
+    if (error) console.error("Erro ao salvar pedido:", error);
   }
 
   const orderHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildMessage())}`;
@@ -404,7 +418,10 @@ export function MenuOrder() {
                 href={orderHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => setCheckoutOpen(false)}
+                onClick={() => {
+                  void savePedido();
+                  setCheckoutOpen(false);
+                }}
               >
                 Enviar pedido
               </a>
