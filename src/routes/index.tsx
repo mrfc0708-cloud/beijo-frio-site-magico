@@ -1,6 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Heart, IceCream2, Instagram, MapPin, Sparkles, Star } from "lucide-react";
-import { MenuOrder } from "../components/MenuOrder";
 import heroImage from "../assets/beijo-frio-sorvete-real.jpg";
 import acaiImage from "../assets/beijo-frio-copo-real.jpg";
 import milkshakeImage from "../assets/beijo-frio-milkshakes-reais.jpg";
