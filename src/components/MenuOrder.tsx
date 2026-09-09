@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
 import { WHATSAPP_NUMBER } from "../lib/whatsapp";
+import { supabase } from "@/integrations/supabase/client";
 
 type MenuItem = {
   id: string;
