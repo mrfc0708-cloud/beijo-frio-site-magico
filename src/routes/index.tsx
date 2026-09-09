@@ -84,7 +84,7 @@ function Index() {
         <nav className="nav-shell" aria-label="Navegação principal">
           <BrandMark />
           <div className="nav-links">
-            <a href="#cardapio">Pedir</a>
+            <Link to="/pedido">Pedir</Link>
             <a href="#sobre">Nossa História</a>
             <a href="#onde">Onde estamos</a>
           </div>
