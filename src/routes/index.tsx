@@ -135,7 +135,6 @@ function Index() {
         </div>
       </section>
 
-      <MenuOrder />
 
       <section id="sobre" className="story-section section-pad">
         <div className="story-photo-wrap">
