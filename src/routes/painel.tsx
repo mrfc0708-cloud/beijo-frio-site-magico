@@ -37,6 +37,15 @@ type Pedido = {
   numero: string;
   observacoes: string | null;
   status: string;
+  forma_pagamento: string | null;
+  troco_para: number | null;
+  sem_troco: boolean | null;
+};
+
+const PAGAMENTO: Record<string, string> = {
+  credito: "Cartão de crédito",
+  debito: "Cartão de débito",
+  dinheiro: "Dinheiro",
 };
 
 const brl = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
