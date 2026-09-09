@@ -19,37 +19,46 @@ export type Database = {
           bairro: string
           criado_em: string
           endereco: string
+          forma_pagamento: string
           id: string
           itens: Json
           nome: string
           numero: string
           observacoes: string | null
+          sem_troco: boolean
           status: string
           total: number
+          troco_para: number | null
         }
         Insert: {
           bairro?: string
           criado_em?: string
           endereco?: string
+          forma_pagamento?: string
           id?: string
           itens?: Json
           nome?: string
           numero?: string
           observacoes?: string | null
+          sem_troco?: boolean
           status?: string
           total?: number
+          troco_para?: number | null
         }
         Update: {
           bairro?: string
           criado_em?: string
           endereco?: string
+          forma_pagamento?: string
           id?: string
           itens?: Json
           nome?: string
           numero?: string
           observacoes?: string | null
+          sem_troco?: boolean
           status?: string
           total?: number
+          troco_para?: number | null
         }
         Relationships: []
       }
