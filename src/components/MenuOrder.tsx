@@ -418,7 +418,10 @@ export function MenuOrder() {
                 href={orderHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => setCheckoutOpen(false)}
+                onClick={() => {
+                  void savePedido();
+                  setCheckoutOpen(false);
+                }}
               >
                 Enviar pedido
               </a>
