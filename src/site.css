@@ -135,3 +135,6 @@ body, a, button { letter-spacing: 0; }
 .magic-lamp { position:fixed; z-index:120; pointer-events:none; font-size:1.6rem; line-height:1; transform:translate(-50%,-50%); animation:bf-magic-lamp .72s cubic-bezier(.4,.05,.35,1) forwards; filter:drop-shadow(2px 2px 0 var(--bf-magenta)); }
 @keyframes bf-magic-lamp { 0% { transform:translate(-50%,-50%) scale(1.15) rotate(0deg); opacity:1; } 55% { transform:translate(calc(-50% + var(--bf-tx)*.6), calc(-50% + var(--bf-ty)*.5)) scale(.7) rotate(140deg); opacity:.95; } 100% { transform:translate(calc(-50% + var(--bf-tx)), calc(-50% + var(--bf-ty))) scale(.12) rotate(320deg); opacity:0; } }
 @media (prefers-reduced-motion: reduce){ .magic-lamp { display:none; } }
+.bf-pay-title { margin-top: .4rem; font-weight: 900; text-transform: uppercase; letter-spacing: .04em; opacity: 1; }
+.bf-check { display: flex; align-items: center; gap: .55rem; margin: -.35rem 0 1rem; font-size: .85rem; font-weight: 800; }
+.bf-check input { width: 1.1rem; height: 1.1rem; accent-color: var(--bf-magenta); }
