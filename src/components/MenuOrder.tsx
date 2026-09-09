@@ -177,6 +177,19 @@ export function MenuOrder() {
     return parts.join("\n");
   }
 
+  async function savePedido() {
+    const { error } = await supabase.from("pedidos").insert({
+      itens: lines.map((l) => ({ label: l.label, price: l.price, qty: l.qty })),
+      total: totals.value,
+      nome: name.trim(),
+      endereco: street.trim(),
+      bairro: district.trim(),
+      numero: number.trim(),
+      observacoes: notes.trim() || null,
+    });
+    if (error) console.error("Erro ao salvar pedido:", error);
+  }
+
   const orderHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildMessage())}`;
   const flavorsNeeded = activeItem?.scoops ?? 0;
   const flavorsOk = !activeItem?.scoops || picked.length === flavorsNeeded;
