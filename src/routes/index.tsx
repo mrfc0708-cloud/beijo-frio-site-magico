@@ -78,11 +78,6 @@ function BrandMark() {
 }
 
 function Index() {
-  function scrollToMenu() {
-    document.getElementById("cardapio")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-
   return (
     <main>
       <header className="site-header">
