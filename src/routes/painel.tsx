@@ -222,6 +222,16 @@ function Pedidos() {
                 <p className="mt-2 text-sm text-muted-foreground">
                   {p.endereco}, nº {p.numero} — {p.bairro} — São Domingos, Bahia
                 </p>
+                <p className="mt-2 text-sm font-semibold text-foreground">
+                  Pagamento: {PAGAMENTO[p.forma_pagamento ?? ""] ?? p.forma_pagamento ?? "—"}
+                  {p.forma_pagamento === "dinheiro"
+                    ? p.sem_troco
+                      ? " — não precisa de troco"
+                      : p.troco_para
+                        ? ` — troco para ${brl(Number(p.troco_para))}`
+                        : ""
+                    : ""}
+                </p>
                 {p.observacoes ? (
                   <p className="mt-1 text-sm text-muted-foreground">Observações: {p.observacoes}</p>
                 ) : null}
