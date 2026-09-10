@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       pedidos: {
         Row: {
+          arquivado: boolean
           bairro: string
           criado_em: string
           endereco: string
@@ -27,10 +28,12 @@ export type Database = {
           observacoes: string | null
           sem_troco: boolean
           status: string
+          telefone: string
           total: number
           troco_para: number | null
         }
         Insert: {
+          arquivado?: boolean
           bairro?: string
           criado_em?: string
           endereco?: string
@@ -42,10 +45,12 @@ export type Database = {
           observacoes?: string | null
           sem_troco?: boolean
           status?: string
+          telefone: string
           total?: number
           troco_para?: number | null
         }
         Update: {
+          arquivado?: boolean
           bairro?: string
           criado_em?: string
           endereco?: string
@@ -57,6 +62,7 @@ export type Database = {
           observacoes?: string | null
           sem_troco?: boolean
           status?: string
+          telefone?: string
           total?: number
           troco_para?: number | null
         }
