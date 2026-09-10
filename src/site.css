@@ -138,3 +138,40 @@ body, a, button { letter-spacing: 0; }
 .bf-pay-title { margin-top: .4rem; font-weight: 900; text-transform: uppercase; letter-spacing: .04em; opacity: 1; }
 .bf-check { display: flex; align-items: center; gap: .55rem; margin: -.35rem 0 1rem; font-size: .85rem; font-weight: 800; }
 .bf-check input { width: 1.1rem; height: 1.1rem; accent-color: var(--bf-magenta); }
+
+/* --- clique "pressionado" --- */
+.order-button:active,.order-add:active,.bf-primary:not(:disabled):active,.cart-fab:active,.panel-action:active { transform: translate(3px,3px); box-shadow: 1px 1px 0 var(--bf-ink); transition-duration: .12s; }
+.order-button,.order-add,.bf-primary,.cart-fab,.panel-action { transition: transform .12s ease, box-shadow .12s ease; }
+
+/* --- entrada no scroll --- */
+.bf-reveal { opacity: 0; }
+.bf-reveal.is-in { opacity: 1; animation: bf-rise .6s cubic-bezier(.22,.7,.3,1); }
+@keyframes bf-rise { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; } }
+
+/* --- parallax --- */
+.bf-parallax { transform: translate3d(0,var(--bf-py,0px),0); will-change: transform; }
+.hero-image.bf-parallax { top: -6%; height: 112%; }
+.product-photo img.bf-parallax { transform: translate3d(0,var(--bf-py,0px),0) scale(1.08); }
+.product-card:hover .product-photo img.bf-parallax { transform: translate3d(0,var(--bf-py,0px),0) scale(1.13); }
+.story-photo-wrap img.bf-parallax { transform: translate3d(0,var(--bf-py,0px),0); }
+
+/* --- gotas de sorvete entre seções --- */
+.hero-section,.menu-section,.story-section,.social-section,.location-section,.site-footer { position: relative; }
+.bf-drip { position: absolute; left: 0; bottom: -1px; z-index: 6; width: 100%; height: clamp(26px,3.4vw,52px); display: block; pointer-events: none; }
+
+/* --- acompanhamento do pedido --- */
+.bf-track { position: fixed; z-index: 130; left: 1rem; right: 1rem; bottom: 1rem; margin: auto; width: min(430px,100%); padding: .9rem 1rem 1rem; border: 2px solid var(--bf-ink); border-radius: 1.2rem .5rem 1.2rem .5rem; background: var(--bf-paper); box-shadow: 6px 6px 0 var(--bf-magenta); animation: bf-rise .45s ease; }
+.bf-track-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
+.bf-track-head strong { color: var(--bf-purple); font: 800 1.1rem/1 "Baloo 2",sans-serif; }
+.bf-track-close { width: 1.9rem; height: 1.9rem; display: grid; place-items: center; border: 2px solid var(--bf-ink); border-radius: 50%; background: var(--bf-lime); cursor: pointer; }
+.bf-track-close svg { width: .85rem; height: .85rem; }
+.bf-track-steps { margin: .85rem 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: .45rem; }
+.bf-track-steps li { display: grid; gap: .35rem; font-size: .68rem; font-weight: 900; text-transform: uppercase; letter-spacing: .03em; opacity: .45; }
+.bf-track-steps li i { display: block; height: 8px; border-radius: 999px; background: color-mix(in oklab,var(--bf-ink) 18%,transparent); }
+.bf-track-steps li.is-done { opacity: 1; }
+.bf-track-steps li.is-done i { background: var(--bf-magenta); }
+@media (prefers-reduced-motion: reduce) {
+  .bf-reveal { opacity: 1; animation: none !important; }
+  .bf-parallax { transform: none !important; }
+  .hero-image.bf-parallax { top: 0; height: 100%; }
+}
