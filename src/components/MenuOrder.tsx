@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { adicionarPedidoLocal } from "@/lib/pedidos-locais";
 
 type MenuItem = {
   id: string;
@@ -65,6 +66,7 @@ export function MenuOrder() {
   const [picked, setPicked] = useState<string[]>([]);
   const [qty, setQty] = useState(1);
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [street, setStreet] = useState("");
   const [district, setDistrict] = useState("");
   const [number, setNumber] = useState("");
@@ -171,6 +173,7 @@ export function MenuOrder() {
   const canSend =
     lines.length > 0 &&
     name.trim().length > 1 &&
+    phone.replace(/\D/g, "").length >= 10 &&
     street.trim().length > 2 &&
     district.trim().length > 1 &&
     number.trim().length > 0 &&
@@ -181,10 +184,11 @@ export function MenuOrder() {
     if (!canSend || sending) return;
     setSending(true);
     setSendError(null);
-    const { error } = await supabase.from("pedidos").insert({
+    const { data, error } = await supabase.from("pedidos").insert({
       itens: lines.map((l) => ({ label: l.label, price: l.price, qty: l.qty })),
       total: totals.value,
       nome: name.trim(),
+      telefone: phone.trim(),
       endereco: street.trim(),
       bairro: district.trim(),
       numero: number.trim(),
@@ -192,12 +196,13 @@ export function MenuOrder() {
       forma_pagamento: payment,
       troco_para: payment === "dinheiro" && !noChange ? changeValue : null,
       sem_troco: payment === "dinheiro" ? noChange : false,
-    });
+    }).select("id").single();
     setSending(false);
     if (error) {
       setSendError("Não conseguimos enviar seu pedido. Tente novamente.");
       return;
     }
+    if (data?.id) adicionarPedidoLocal(data.id);
     setLines([]);
     setNotes("");
     setPayment(null);
@@ -374,7 +379,7 @@ export function MenuOrder() {
               <X aria-hidden="true" />
             </button>
             <h3>Dados de entrega</h3>
-            <p className="bf-modal-note">Última etapa: informe nome, endereço e forma de pagamento.</p>
+            <p className="bf-modal-note">Última etapa: informe nome, telefone, endereço e forma de pagamento.</p>
             <label className="bf-field">
               Nome
               <input
@@ -382,6 +387,16 @@ export function MenuOrder() {
                 maxLength={100}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Seu nome"
+              />
+            </label>
+            <label className="bf-field">
+              Telefone / WhatsApp
+              <input
+                value={phone}
+                inputMode="tel"
+                maxLength={20}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="(75) 90000-0000"
               />
             </label>
             <label className="bf-field">
