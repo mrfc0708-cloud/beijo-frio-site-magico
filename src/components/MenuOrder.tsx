@@ -184,7 +184,9 @@ export function MenuOrder() {
     if (!canSend || sending) return;
     setSending(true);
     setSendError(null);
-    const { data, error } = await supabase.from("pedidos").insert({
+    const novoId = crypto.randomUUID();
+    const { error } = await supabase.from("pedidos").insert({
+      id: novoId,
       itens: lines.map((l) => ({ label: l.label, price: l.price, qty: l.qty })),
       total: totals.value,
       nome: name.trim(),
@@ -196,13 +198,13 @@ export function MenuOrder() {
       forma_pagamento: payment,
       troco_para: payment === "dinheiro" && !noChange ? changeValue : null,
       sem_troco: payment === "dinheiro" ? noChange : false,
-    }).select("id").single();
+    });
     setSending(false);
     if (error) {
       setSendError("Não conseguimos enviar seu pedido. Tente novamente.");
       return;
     }
-    if (data?.id) adicionarPedidoLocal(data.id);
+    adicionarPedidoLocal(novoId);
     setLines([]);
     setNotes("");
     setPayment(null);
