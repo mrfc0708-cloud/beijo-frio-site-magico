@@ -37,6 +37,8 @@ type Pedido = {
   numero: string;
   observacoes: string | null;
   status: string;
+  telefone: string | null;
+  arquivado: boolean | null;
   forma_pagamento: string | null;
   troco_para: number | null;
   sem_troco: boolean | null;
@@ -47,6 +49,14 @@ const PAGAMENTO: Record<string, string> = {
   debito: "Cartão de débito",
   dinheiro: "Dinheiro",
 };
+
+const STATUS_STAGES = [
+  { id: "novo", label: "Novo" },
+  { id: "confirmado", label: "Confirmado" },
+  { id: "preparando", label: "Preparando" },
+  { id: "saiu_entrega", label: "Saiu para entrega" },
+  { id: "entregue", label: "Entregue" },
+] as const;
 
 const brl = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
@@ -142,6 +152,7 @@ function Pedidos() {
       const { data, error } = await supabase
         .from("pedidos")
         .select("*")
+        .eq("arquivado", false)
         .order("criado_em", { ascending: false });
       if (error) throw error;
       return (data ?? []) as Pedido[];
@@ -160,13 +171,27 @@ function Pedidos() {
     };
   }, [queryClient]);
 
-  const marcarEntregue = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase.from("pedidos").update({ status: "entregue" }).eq("id", id);
+  const definirStatus = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+      const { error } = await supabase.from("pedidos").update({ status }).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["pedidos"] }),
   });
+
+  const limparEntregues = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase
+        .from("pedidos")
+        .update({ arquivado: true })
+        .eq("status", "entregue")
+        .eq("arquivado", false);
+      if (error) throw error;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["pedidos"] }),
+  });
+
+  const temEntregues = pedidos.some((p) => p.status === "entregue");
 
   return (
     <main className="min-h-screen bg-background px-4 py-8">
@@ -176,6 +201,15 @@ function Pedidos() {
             <h1 className="text-2xl font-bold text-foreground">Pedidos</h1>
             <p className="text-sm text-muted-foreground">Atualiza automaticamente a cada novo pedido.</p>
           </div>
+          <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            disabled={!temEntregues || limparEntregues.isPending}
+            onClick={() => limparEntregues.mutate()}
+            className="panel-action rounded-md border-2 border-border bg-card px-3 py-2 text-sm font-semibold text-foreground shadow-[3px_3px_0_var(--bf-ink)] disabled:opacity-50"
+          >
+            Limpar pedidos entregues
+          </button>
           <button
             type="button"
             onClick={async () => {
@@ -187,6 +221,7 @@ function Pedidos() {
           >
             Sair
           </button>
+          </div>
         </header>
 
         {isLoading ? (
@@ -219,7 +254,10 @@ function Pedidos() {
 
                 <p className="mt-3 text-base font-bold text-foreground">Total: {brl(Number(p.total))}</p>
 
-                <p className="mt-2 text-sm text-muted-foreground">
+                <p className="mt-2 text-sm font-semibold text-foreground">
+                  Telefone: {p.telefone?.trim() ? p.telefone : "não informado"}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
                   {p.endereco}, nº {p.numero} — {p.bairro} — São Domingos, Bahia
                 </p>
                 <p className="mt-2 text-sm font-semibold text-foreground">
@@ -236,16 +274,23 @@ function Pedidos() {
                   <p className="mt-1 text-sm text-muted-foreground">Observações: {p.observacoes}</p>
                 ) : null}
 
-                {p.status !== "entregue" ? (
-                  <button
-                    type="button"
-                    onClick={() => marcarEntregue.mutate(p.id)}
-                    disabled={marcarEntregue.isPending}
-                    className="mt-4 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60"
-                  >
-                    Marcar como entregue
-                  </button>
-                ) : null}
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {STATUS_STAGES.map((stage) => (
+                    <button
+                      key={stage.id}
+                      type="button"
+                      onClick={() => definirStatus.mutate({ id: p.id, status: stage.id })}
+                      disabled={definirStatus.isPending || p.status === stage.id}
+                      className={`panel-action rounded-md border-2 border-border px-3 py-2 text-xs font-bold shadow-[3px_3px_0_var(--bf-ink)] disabled:opacity-100 ${
+                        p.status === stage.id
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-card text-foreground"
+                      }`}
+                    >
+                      {stage.label}
+                    </button>
+                  ))}
+                </div>
               </li>
             ))}
           </ul>
