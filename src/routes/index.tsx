@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Heart, IceCream2, Instagram, MapPin, Sparkles, Star } from "lucide-react";
+import { ScrollFx } from "../components/ScrollFx";
+import { SectionDrip } from "../components/SectionDrip";
 import heroImage from "../assets/beijo-frio-sorvete-real.jpg";
 import acaiImage from "../assets/beijo-frio-copo-real.jpg";
 import milkshakeImage from "../assets/beijo-frio-milkshakes-reais.jpg";
@@ -80,6 +82,7 @@ function BrandMark() {
 function Index() {
   return (
     <main>
+      <ScrollFx />
       <header className="site-header">
         <nav className="nav-shell" aria-label="Navegação principal">
           <BrandMark />
@@ -111,6 +114,7 @@ function Index() {
           </Link>
         </div>
         <div className="hero-sticker" aria-hidden="true"><span>feito com</span><strong>♥</strong><span>pra você</span></div>
+        <SectionDrip color="var(--bf-cream)" />
       </section>
 
       <section id="cardapio" className="menu-section section-pad">
@@ -133,6 +137,7 @@ function Index() {
             </article>
           ))}
         </div>
+        <SectionDrip color="var(--bf-purple)" />
       </section>
 
 
@@ -149,6 +154,7 @@ function Index() {
           <p>Aqui, cada pedido é preparado com calma e capricho — daquele jeitinho artesanal que transforma uma sobremesa em memória boa.</p>
           <div className="story-sign"><Heart aria-hidden="true" /> Feito por gente daqui</div>
         </div>
+        <SectionDrip color="var(--bf-lime)" />
       </section>
 
       <section className="social-section section-pad" aria-labelledby="depoimentos-titulo">
@@ -173,6 +179,7 @@ function Index() {
           </div>
           <p className="testimonial-note">Depoimentos ilustrativos para apresentação do site.</p>
         </div>
+        <SectionDrip color="var(--bf-magenta)" />
       </section>
 
       <section id="onde" className="location-section">
@@ -189,6 +196,7 @@ function Index() {
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
         />
+        <SectionDrip color="var(--bf-ink)" />
       </section>
 
       <footer className="site-footer">
