@@ -73,7 +73,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      status_pedido: { Args: { p_id: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never
