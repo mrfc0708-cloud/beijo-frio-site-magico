@@ -175,3 +175,66 @@ body, a, button { letter-spacing: 0; }
   .bf-parallax { transform: none !important; }
   .hero-image.bf-parallax { top: 0; height: 100%; }
 }
+
+/* ---------- Painel Beijo Frio ---------- */
+.painel-page { min-height: 100svh; padding: 2.5rem 1rem 4rem; background-color: var(--bf-cream); background-image: radial-gradient(color-mix(in oklab,var(--bf-magenta) 17%,transparent) 1px,transparent 1px); background-size: 22px 22px; }
+.painel-wrap { width: min(760px, 100%); margin: 0 auto; }
+.painel-title { margin: 0; color: var(--bf-purple); font: 800 clamp(2rem,5vw,2.8rem)/.95 "Baloo 2",sans-serif; }
+.painel-sub { margin: .35rem 0 0; color: var(--bf-ink); font-weight: 700; opacity: .65; font-size: .9rem; }
+.painel-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; }
+.painel-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.painel-btn { display: inline-flex; align-items: center; gap: .4rem; padding: .55rem 1rem; border: 2px solid var(--bf-ink); border-radius: 999px 999px 999px .5rem; background: var(--bf-paper); color: var(--bf-ink); font: inherit; font-weight: 900; font-size: .85rem; cursor: pointer; box-shadow: 4px 4px 0 var(--bf-ink); transition: transform .12s ease, box-shadow .12s ease; }
+.painel-btn:hover:not(:disabled) { transform: translate(-2px,-3px); box-shadow: 6px 6px 0 var(--bf-ink); }
+.painel-btn:active:not(:disabled) { transform: translate(3px,3px); box-shadow: 1px 1px 0 var(--bf-ink); }
+.painel-btn:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; }
+.painel-btn--lime { background: var(--bf-lime); }
+.painel-state { margin-top: 2rem; padding: 1.6rem; border: 2px solid var(--bf-ink); border-radius: 1.2rem .45rem 1.2rem .45rem; background: var(--bf-paper); box-shadow: 5px 5px 0 var(--bf-ink); color: var(--bf-purple); font: 800 1.15rem/1.3 "Baloo 2",sans-serif; text-align: center; }
+
+.painel-list { margin: 1.5rem 0 0; padding: 0; list-style: none; display: grid; gap: 1rem; }
+.painel-card { padding: 1.25rem 1.35rem; border: 2px solid var(--bf-ink); border-radius: 1.2rem .45rem 1.2rem .45rem; background: var(--bf-paper); box-shadow: 5px 5px 0 var(--bf-ink); transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease; }
+.painel-card:hover { transform: translate(-2px,-3px); box-shadow: 8px 8px 0 var(--bf-ink); }
+.painel-card.is-entregue { opacity: .65; }
+.painel-card-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: .5rem; }
+.painel-card h2 { margin: 0; color: var(--bf-purple); font: 800 1.4rem/1.05 "Baloo 2",sans-serif; }
+.painel-time { margin: .2rem 0 0; font-size: .8rem; font-weight: 700; opacity: .6; }
+.painel-itens { margin: .8rem 0 0; padding: 0; list-style: none; display: grid; gap: .25rem; font-size: .9rem; font-weight: 700; }
+.painel-total { margin: .8rem 0 0; color: var(--bf-magenta); font: 800 1.25rem/1 "Baloo 2",sans-serif; }
+.painel-info { margin: .5rem 0 0; font-size: .88rem; font-weight: 700; }
+.painel-info--dim { opacity: .65; font-weight: 600; }
+.painel-status-row { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: .45rem; }
+
+.status-pill { display: inline-flex; align-items: center; padding: .4rem .8rem; border: 2px solid var(--bf-ink); border-radius: 999px; font-size: .7rem; font-weight: 900; text-transform: uppercase; letter-spacing: .03em; box-shadow: 3px 3px 0 var(--bf-ink); }
+.status-pill--novo { background: var(--bf-magenta); color: var(--bf-paper); }
+.status-pill--confirmado { background: var(--bf-purple); color: var(--bf-paper); }
+.status-pill--preparando { background: var(--bf-lime); color: var(--bf-ink); }
+.status-pill--saiu_entrega { background: var(--bf-ink); color: var(--bf-paper); }
+.status-pill--entregue { background: color-mix(in oklab, var(--bf-ink) 10%, var(--bf-paper)); color: var(--bf-ink); }
+
+.status-btn { padding: .5rem .85rem; border: 2px solid var(--bf-ink); border-radius: 999px; background: var(--bf-paper); color: var(--bf-ink); font: inherit; font-size: .72rem; font-weight: 900; text-transform: uppercase; cursor: pointer; box-shadow: 3px 3px 0 var(--bf-ink); transition: transform .12s ease, box-shadow .12s ease; }
+.status-btn:hover:not(:disabled) { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--bf-ink); }
+.status-btn:active:not(:disabled) { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--bf-ink); }
+.status-btn:disabled { cursor: default; }
+.status-btn.is-active.status-btn--novo { background: var(--bf-magenta); color: var(--bf-paper); }
+.status-btn.is-active.status-btn--confirmado { background: var(--bf-purple); color: var(--bf-paper); }
+.status-btn.is-active.status-btn--preparando { background: var(--bf-lime); color: var(--bf-ink); }
+.status-btn.is-active.status-btn--saiu_entrega { background: var(--bf-ink); color: var(--bf-paper); }
+.status-btn.is-active.status-btn--entregue { background: color-mix(in oklab, var(--bf-ink) 10%, var(--bf-paper)); color: var(--bf-ink); }
+
+/* Login do painel */
+.painel-login-page { min-height: 100svh; display: grid; place-items: center; padding: 1rem; background-color: var(--bf-cream); background-image: radial-gradient(color-mix(in oklab,var(--bf-magenta) 17%,transparent) 1px,transparent 1px); background-size: 22px 22px; }
+.painel-login { width: min(400px,100%); padding: 1.8rem; border: 3px solid var(--bf-ink); border-radius: 1.6rem .6rem 1.6rem .6rem; background: var(--bf-paper); box-shadow: 10px 10px 0 var(--bf-magenta); }
+.painel-login h1 { margin: 0; color: var(--bf-purple); font: 800 1.9rem/1 "Baloo 2",sans-serif; }
+.painel-login-sub { margin: .35rem 0 0; font-size: .85rem; font-weight: 700; opacity: .65; }
+.painel-field { margin-top: 1rem; display: block; font-size: .85rem; font-weight: 900; color: var(--bf-ink); }
+.painel-input { margin-top: .3rem; width: 100%; padding: .65rem .8rem; border: 2px solid var(--bf-ink); border-radius: .6rem .25rem .6rem .25rem; background: var(--bf-cream); color: var(--bf-ink); font: inherit; font-weight: 700; box-sizing: border-box; }
+.painel-error { margin: .8rem 0 0; padding: .6rem .8rem; border: 2px solid var(--bf-ink); border-radius: .5rem; background: var(--bf-magenta); color: var(--bf-paper); font-size: .82rem; font-weight: 800; }
+.painel-login .bf-primary { margin-top: 1.2rem; }
+
+/* Foco de teclado visível sobre os fundos coloridos */
+.painel-page :is(a,button,input,select,textarea):focus-visible,
+.painel-login-page :is(a,button,input,select,textarea):focus-visible {
+  outline: 3px solid var(--bf-ink);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--bf-lime), 4px 4px 0 var(--bf-ink);
+}
+.painel-input:focus-visible { box-shadow: 0 0 0 5px var(--bf-lime); }
