@@ -14,7 +14,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Sorvetes, açaí, milkshakes e bala baiana feitos com carinho em São Domingos, Bahia. Monte seu pedido online.",
+          "Sorvetes, açaí e milkshakes feitos com carinho em São Domingos, Bahia. Monte seu pedido online.",
       },
       { property: "og:title", content: "Beijo Frio | Sorveteria e Açaí" },
       {
@@ -55,7 +55,7 @@ const testimonials = [
     name: "Cliente da casa",
   },
   {
-    quote: "A bala baiana é maravilhosa e o atendimento tem aquele carinho que faz a gente voltar.",
+    quote: "O milkshake é maravilhoso e o atendimento tem aquele carinho que faz a gente voltar.",
     name: "Cliente de São Domingos",
   },
   {
