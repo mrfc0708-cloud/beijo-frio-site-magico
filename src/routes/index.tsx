@@ -5,7 +5,7 @@ import { SectionDrip } from "../components/SectionDrip";
 import heroImage from "../assets/beijo-frio-sorvete-real.jpg";
 import acaiImage from "../assets/beijo-frio-copo-real.jpg";
 import milkshakeImage from "../assets/beijo-frio-milkshakes-reais.jpg";
-import balaImage from "../assets/beijo-frio-salgados-reais.jpg";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -46,12 +46,6 @@ const products = [
     name: "E que tal um na taça?",
     description: "Daqueles que levam todo o estresse embora de tão bons!",
     image: milkshakeImage,
-  },
-  {
-    category: "Bala Baiana",
-    name: "AQUELE Pastel de Forno?",
-    description: "Pra matar AQUELA vontade de um lanchinho...",
-    image: balaImage,
   },
 ];
 
