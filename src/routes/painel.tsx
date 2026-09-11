@@ -58,6 +58,8 @@ const STATUS_STAGES = [
   { id: "entregue", label: "Entregue" },
 ] as const;
 
+const statusLabel = (id: string) => STATUS_STAGES.find((s) => s.id === id)?.label ?? id;
+
 const brl = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 function PainelPage() {
@@ -75,8 +77,8 @@ function PainelPage() {
 
   if (carregando) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-background">
-        <p className="text-sm text-muted-foreground">Carregando…</p>
+      <main className="painel-login-page">
+        <p className="painel-state" style={{ marginTop: 0 }}>Carregando…</p>
       </main>
     );
   }
@@ -100,42 +102,35 @@ function Login() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background px-4">
-      <form
-        onSubmit={entrar}
-        className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-lg"
-      >
-        <h1 className="text-xl font-bold text-foreground">Painel Beijo Frio</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Acesso restrito à equipe.</p>
+    <main className="painel-login-page">
+      <form onSubmit={entrar} className="painel-login">
+        <h1>Painel Beijo Frio</h1>
+        <p className="painel-login-sub">Acesso restrito à equipe.</p>
 
-        <label className="mt-5 block text-sm font-medium text-foreground">
+        <label className="painel-field">
           E-mail
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground"
+            className="painel-input"
           />
         </label>
-        <label className="mt-3 block text-sm font-medium text-foreground">
+        <label className="painel-field">
           Senha
           <input
             type="password"
             required
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
-            className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground"
+            className="painel-input"
           />
         </label>
 
-        {erro ? <p className="mt-3 text-sm text-destructive">{erro}</p> : null}
+        {erro ? <p className="painel-error">{erro}</p> : null}
 
-        <button
-          type="submit"
-          disabled={enviando}
-          className="mt-5 w-full rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60"
-        >
+        <button type="submit" disabled={enviando} className="bf-primary">
           {enviando ? "Entrando…" : "Entrar"}
         </button>
       </form>
@@ -192,59 +187,67 @@ function Pedidos() {
   });
 
   const temEntregues = pedidos.some((p) => p.status === "entregue");
+  const ordenados = [...pedidos].sort((a, b) => {
+    const aEnt = a.status === "entregue" ? 1 : 0;
+    const bEnt = b.status === "entregue" ? 1 : 0;
+    return aEnt - bEnt;
+  });
 
   return (
-    <main className="min-h-screen bg-background px-4 py-8">
-      <div className="mx-auto max-w-3xl">
-        <header className="flex flex-wrap items-center justify-between gap-3">
+    <main className="painel-page">
+      <div className="painel-wrap">
+        <header className="painel-header">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Pedidos</h1>
-            <p className="text-sm text-muted-foreground">Atualiza automaticamente a cada novo pedido.</p>
+            <h1 className="painel-title">Pedidos</h1>
+            <p className="painel-sub">Atualiza automaticamente a cada novo pedido.</p>
           </div>
-          <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            disabled={!temEntregues || limparEntregues.isPending}
-            onClick={() => limparEntregues.mutate()}
-            className="panel-action rounded-md border-2 border-border bg-card px-3 py-2 text-sm font-semibold text-foreground shadow-[3px_3px_0_var(--bf-ink)] disabled:opacity-50"
-          >
-            Limpar pedidos entregues
-          </button>
-          <button
-            type="button"
-            onClick={async () => {
-              await queryClient.cancelQueries();
-              queryClient.clear();
-              await supabase.auth.signOut();
-            }}
-            className="rounded-md border border-input bg-background px-3 py-2 text-sm font-medium text-foreground"
-          >
-            Sair
-          </button>
+          <div className="painel-actions">
+            <button
+              type="button"
+              disabled={!temEntregues || limparEntregues.isPending}
+              onClick={() => limparEntregues.mutate()}
+              className="painel-btn painel-btn--lime"
+            >
+              Limpar pedidos entregues
+            </button>
+            <button
+              type="button"
+              onClick={async () => {
+                await queryClient.cancelQueries();
+                queryClient.clear();
+                await supabase.auth.signOut();
+              }}
+              className="painel-btn"
+            >
+              Sair
+            </button>
           </div>
         </header>
 
         {isLoading ? (
-          <p className="mt-8 text-sm text-muted-foreground">Carregando pedidos…</p>
+          <p className="painel-state">Carregando pedidos…</p>
         ) : pedidos.length === 0 ? (
-          <p className="mt-8 text-sm text-muted-foreground">Nenhum pedido por aqui ainda.</p>
+          <p className="painel-state">
+            Nenhum pedido por enquanto — assim que alguém pedir, aparece aqui.
+          </p>
         ) : (
-          <ul className="mt-6 space-y-4">
-            {pedidos.map((p) => (
-              <li key={p.id} className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-                <div className="flex flex-wrap items-start justify-between gap-2">
+          <ul className="painel-list">
+            {ordenados.map((p) => (
+              <li
+                key={p.id}
+                className={`painel-card${p.status === "entregue" ? " is-entregue" : ""}`}
+              >
+                <div className="painel-card-head">
                   <div>
-                    <h2 className="text-lg font-semibold text-foreground">{p.nome}</h2>
-                    <p className="text-sm text-muted-foreground">
-                      {new Date(p.criado_em).toLocaleString("pt-BR")}
-                    </p>
+                    <h2>{p.nome}</h2>
+                    <p className="painel-time">{new Date(p.criado_em).toLocaleString("pt-BR")}</p>
                   </div>
-                  <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase text-foreground">
-                    {p.status}
+                  <span className={`status-pill status-pill--${p.status}`}>
+                    {statusLabel(p.status)}
                   </span>
                 </div>
 
-                <ul className="mt-3 space-y-1 text-sm text-foreground">
+                <ul className="painel-itens">
                   {(p.itens ?? []).map((item, i) => (
                     <li key={`${p.id}-${i}`}>
                       {item.qty}x {item.label} — {brl(item.price * item.qty)}
@@ -252,15 +255,15 @@ function Pedidos() {
                   ))}
                 </ul>
 
-                <p className="mt-3 text-base font-bold text-foreground">Total: {brl(Number(p.total))}</p>
+                <p className="painel-total">Total: {brl(Number(p.total))}</p>
 
-                <p className="mt-2 text-sm font-semibold text-foreground">
+                <p className="painel-info">
                   Telefone: {p.telefone?.trim() ? p.telefone : "não informado"}
                 </p>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="painel-info painel-info--dim">
                   {p.endereco}, nº {p.numero} — {p.bairro} — São Domingos, Bahia
                 </p>
-                <p className="mt-2 text-sm font-semibold text-foreground">
+                <p className="painel-info">
                   Pagamento: {PAGAMENTO[p.forma_pagamento ?? ""] ?? p.forma_pagamento ?? "—"}
                   {p.forma_pagamento === "dinheiro"
                     ? p.sem_troco
@@ -271,20 +274,18 @@ function Pedidos() {
                     : ""}
                 </p>
                 {p.observacoes ? (
-                  <p className="mt-1 text-sm text-muted-foreground">Observações: {p.observacoes}</p>
+                  <p className="painel-info painel-info--dim">Observações: {p.observacoes}</p>
                 ) : null}
 
-                <div className="mt-4 flex flex-wrap gap-2">
+                <div className="painel-status-row">
                   {STATUS_STAGES.map((stage) => (
                     <button
                       key={stage.id}
                       type="button"
                       onClick={() => definirStatus.mutate({ id: p.id, status: stage.id })}
                       disabled={definirStatus.isPending || p.status === stage.id}
-                      className={`panel-action rounded-md border-2 border-border px-3 py-2 text-xs font-bold shadow-[3px_3px_0_var(--bf-ink)] disabled:opacity-100 ${
-                        p.status === stage.id
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-card text-foreground"
+                      className={`status-btn status-btn--${stage.id}${
+                        p.status === stage.id ? " is-active" : ""
                       }`}
                     >
                       {stage.label}
