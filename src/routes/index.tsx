@@ -5,7 +5,7 @@ import { SectionDrip } from "../components/SectionDrip";
 import heroImage from "../assets/beijo-frio-sorvete-real.jpg";
 import acaiImage from "../assets/beijo-frio-copo-real.jpg";
 import milkshakeImage from "../assets/beijo-frio-milkshakes-reais.jpg";
-import balaImage from "../assets/beijo-frio-salgados-reais.jpg";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Sorvetes, açaí, milkshakes e bala baiana feitos com carinho em São Domingos, Bahia. Monte seu pedido online.",
+          "Sorvetes, açaí e milkshakes feitos com carinho em São Domingos, Bahia. Monte seu pedido online.",
       },
       { property: "og:title", content: "Beijo Frio | Sorveteria e Açaí" },
       {
@@ -47,12 +47,6 @@ const products = [
     description: "Daqueles que levam todo o estresse embora de tão bons!",
     image: milkshakeImage,
   },
-  {
-    category: "Bala Baiana",
-    name: "AQUELE Pastel de Forno?",
-    description: "Pra matar AQUELA vontade de um lanchinho...",
-    image: balaImage,
-  },
 ];
 
 const testimonials = [
@@ -61,7 +55,7 @@ const testimonials = [
     name: "Cliente da casa",
   },
   {
-    quote: "A bala baiana é maravilhosa e o atendimento tem aquele carinho que faz a gente voltar.",
+    quote: "O milkshake é maravilhoso e o atendimento tem aquele carinho que faz a gente voltar.",
     name: "Cliente de São Domingos",
   },
   {
